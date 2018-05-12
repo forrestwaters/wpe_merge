@@ -13,6 +13,9 @@ class WpeMerge(object):
     def __init__(self, input_file, output_file):
         self.input_file = input_file
         self.output_file = output_file
+
+
+    def __call__(self):
         self.parse_csv()
         self.merge()
 
