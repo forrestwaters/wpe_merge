@@ -1,6 +1,5 @@
 import csv
 import requests
-from account import Account
 
 API_ENDPOINT = "http://interview.wpengine.io/v1/accounts/"
 
