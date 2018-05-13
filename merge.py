@@ -32,16 +32,20 @@ class WpeMerge(object):
 
     def merge(self):
         self.merged_list = []
-        for account in self.accounts:
-            api_response = self.fetch_api(account['Account ID'])
-            merged_tuple = (account['Account ID'], account['First Name'], account['Created On'], api_response['status'], api_response['created_on'])
-            self.merged_list.append(merged_tuple)
+        for entry in self.accounts:
+            api_response = self.fetch_api(entry['Account ID'])
+            entry['Status'] = api_response['status']
+            entry['Status Set On'] = api_response['created_on']
+            self.merged_list.append(entry)
         return self.merged_list
 
     
     def write_to_new_file(self):
-        for account in self.merge():
-            print account
-    
-
+        with open(self.output_file, 'w') as csvfile:
+            fieldnames = "Account ID", "First Name", "Created On", "Status", "Status Set On"
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            for entry in self.merged_list:
+                del entry['Account Name'] 
+                writer.writerow(entry)
 
