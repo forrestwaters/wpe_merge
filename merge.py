@@ -13,9 +13,6 @@ class WpeMerge(object):
     def __init__(self, input_file, output_file):
         self.input_file = input_file
         self.output_file = output_file
-
-
-    def __call__(self):
         self.parse_csv()
         self.merge()
 
@@ -27,14 +24,25 @@ class WpeMerge(object):
             for row in reader:
                 self.accounts.append(row)
             return self.accounts
+
     
+    def fetch_api(self, account_id):
+        with requests.get(API_ENDPOINT + account_id) as x:
+            return x.json()
+    
+
     def merge(self):
         self.merged_list = []
         for account in self.accounts:
-            x = Account(account)
-            self.merged_list.append(x.__dict__)
+            api_response = self.fetch_api(account['Account ID'])
+            merged_tuple = (account['Account ID'], account['First Name'], account['Created On'], api_response['status'], api_response['created_on'])
+            self.merged_list.append(merged_tuple)
         return self.merged_list
+
+    
+    def write_to_new_file(self):
+        for account in self.merge():
+            print account
     
 
-test = WpeMerge("sample.csv", "test")
-print(test.merged_list)
+
