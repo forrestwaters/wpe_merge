@@ -1,5 +1,3 @@
-import csv
-import requests
 from merge import WpeMerge
 
 
