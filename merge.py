@@ -12,8 +12,6 @@ class WpeMerge(object):
     def __init__(self, input_file, output_file):
         self.input_file = input_file
         self.output_file = output_file
-        self.parse_csv()
-        self.merge()
 
     
     def parse_csv(self):
@@ -29,6 +27,7 @@ class WpeMerge(object):
     
 
     def merge(self):
+        self.parse_csv()
         self.merged_list = []
         for entry in self.accounts:
             api_response = self.fetch_api(entry['Account ID'])
@@ -39,6 +38,7 @@ class WpeMerge(object):
 
     
     def write_to_new_file(self):
+        self.merge()
         with open(self.output_file, 'w') as csvfile:
             fieldnames = "Account ID", "First Name", "Created On", "Status", "Status Set On"
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
