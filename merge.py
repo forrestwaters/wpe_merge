@@ -19,9 +19,7 @@ class WpeMerge(object):
     def parse_csv(self):
         with open(self.input_file) as csv_file:
             reader = csv.DictReader(csv_file)
-            self.accounts = []
-            for row in reader:
-                self.accounts.append(row)
+            self.accounts = [row for row in reader]
             return self.accounts
 
     
@@ -46,6 +44,6 @@ class WpeMerge(object):
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             for entry in self.merged_list:
-                del entry['Account Name'] 
+                del entry['Account Name'] # Account name doesn't need to be written to the new csv
                 writer.writerow(entry)
 
