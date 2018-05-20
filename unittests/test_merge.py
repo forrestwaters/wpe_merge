@@ -1,9 +1,7 @@
 import os
 import sys
 import unittest
-import tempfile
-sys.path.append('/Users/forrest.waters/projects/scratch/scratch/forrestwaters/wpe_merge') #this seems bad
-from merge import WpeMerge
+from src.merge import WpeMerge
 from collections import OrderedDict
 
 
