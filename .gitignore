@@ -3,4 +3,6 @@
 out
 gen
 *.pyc
+Pipfile*
 *.csv
+!unittests/test.csv

@@ -42,8 +42,10 @@ class WpeMerge(object):
         :return: json (dict) response from the api
         """
         with requests.get(API_ENDPOINT + account_id) as x:
-            # x.json() will fail if it's a 404? maybe wrap this in a try statement
-            return x.json()
+            if x.status_code == 200:
+                return x.json()
+            else:
+                pass
     
 
     def merge(self):
@@ -54,11 +56,11 @@ class WpeMerge(object):
         self.parse_csv()
         self.merged_list = []
         for entry in self.accounts:
-            # TODO: this may be the best place to check our data before ? 
             api_response = self.fetch_api(entry['Account ID'])
-            entry['Status'] = api_response['status']
-            entry['Status Set On'] = api_response['created_on']
-            self.merged_list.append(entry)
+            if api_response is not None:
+                entry['Status'] = api_response['status']
+                entry['Status Set On'] = api_response['created_on']
+                self.merged_list.append(entry)
         return self.merged_list
 
     
