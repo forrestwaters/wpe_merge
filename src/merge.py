@@ -16,26 +16,21 @@ class WpeMerge(object):
     Account ID, First Name, Created On, Status, Status Set On
     """
 
-    def __init__(self, input_file, output_file):
+    def __init__(self, output_file):
         """
-        :param input_file: csv_file to read initial data from.
         :param output_file: file that we will write our merged data to
         """
-        self.input_file = input_file
         self.output_file = output_file
 
-    
-    def parse_csv(self):
+    def parse_csv(self, csv_file):
         """
         Parse the csv as an OrderedDict.
         :return: list of dicts for each account.
         """
-        with open(self.input_file) as csv_file:
-            reader = csv.DictReader(csv_file)
-            self.accounts = [row for row in reader]
-            return self.accounts
+        reader = csv.DictReader(csv_file)
+        self.accounts = [row for row in reader]
+        return self.accounts
 
-    
     def fetch_api(self, account_id):
         """
         :param: pass an account_id
@@ -46,14 +41,13 @@ class WpeMerge(object):
                 return x.json()
             else:
                 pass
-    
 
-    def merge(self):
+    def merge(self, csv_file):
         """
         Parse the csv; for each account id, hit the API and merge the data
         :return: list of dictionaries for each account id
         """
-        self.parse_csv()
+        self.parse_csv(csv_file)
         self.merged_list = []
         for entry in self.accounts:
             api_response = self.fetch_api(entry['Account ID'])
@@ -63,17 +57,15 @@ class WpeMerge(object):
                 self.merged_list.append(entry)
         return self.merged_list
 
-    
-    def write_to_new_file(self):
+    def write_to_new_file(self, csv_file):
         """
         Call merge() and write the merged data to our output_file
         """
-        self.merge()
+        self.merge(csv_file)
         with open(self.output_file, 'w') as csvfile:
             fieldnames = "Account ID", "First Name", "Created On", "Status", "Status Set On"
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             for entry in self.merged_list:
-                del entry['Account Name'] # Account name doesn't need to be written to the new csv
+                del entry['Account Name']  # Account name doesn't need to be written to the new csv
                 writer.writerow(entry)
-

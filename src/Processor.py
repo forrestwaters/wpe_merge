@@ -11,7 +11,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    account_merge = WpeMerge(args.input, args.output)
-    account_merge.write_to_new_file()
+    account_merge = WpeMerge(args.output)
+    account_merge.write_to_new_file(open(args.input))
 
 if __name__ == '__main__': main()
