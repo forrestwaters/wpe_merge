@@ -7,3 +7,5 @@ Pipfile*
 *.csv
 !unittests/test.csv
 .vscode/*
+wpe_merge.code-workspace
+unittests/.vscode/settings.json
