@@ -1,4 +1,3 @@
-import os
 import csv
 import unittest
 from io import StringIO
@@ -7,9 +6,7 @@ from collections import OrderedDict
 
 
 class TestWpeMerge(unittest.TestCase):
-    input_file = StringIO("""Account ID,Account Name,First Name,Created On
-    12345,lexcorp,Lex,1/12/11""")
-    out_file = './new.csv'
+    input_file = StringIO("""Account ID,Account Name,First Name,Created On\n12345,lexcorp,Lex,1/12/11""")
     wpm = WpeMerge()
 
     def test_parse_csv(self):
@@ -27,11 +24,8 @@ class TestWpeMerge(unittest.TestCase):
         self.assertEqual(self.wpm.merge(account), expected_merge)
 
     def test_write_new_file(self):
-        expected_csv = 'Account ID,First Name,Created On,Status,Status Set On\r\n12345,Lex,1/12/11,good,2011-01-12\r\n'
+        expected_csv = """Account ID,First Name,Created On,Status,Status Set On\r\n12345,Lex,1/12/11,good,2011-01-12\r\n"""
+        out_file = StringIO()
+        self.wpm.write_to_new_file(self.input_file, out_file)
 
-        self.wpm.write_to_new_file(self.input_file, self.out_file)
-        content = self.input_file
-
-        self.assertEqual(content, expected_csv)
-
-        os.remove('./new.csv')
+        self.assertEqual(out_file.getvalue(), expected_csv)
