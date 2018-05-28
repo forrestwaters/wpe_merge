@@ -44,7 +44,7 @@ class WpeMerge(object):
         """
         hit the API and merge the data
         :param: pass account_id
-        :return: list of dictionaries for each account id
+        :return: merged account dictionary
         """    
         api_response = self.fetch_api(account['Account ID'])
         if api_response is not None:
