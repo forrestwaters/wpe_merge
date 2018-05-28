@@ -45,12 +45,13 @@ class WpeMerge(object):
         hit the API and merge the data
         :param: pass account_id
         :return: merged account dictionary
-        """    
-        api_response = self.fetch_api(account['Account ID'])
-        if api_response is not None:
-            account['Status'] = api_response['status']
-            account['Status Set On'] = api_response['created_on']
-            return account
+        """
+        if account['Account ID'] is not '':
+            api_response = self.fetch_api(account['Account ID'])
+            if api_response is not None:
+                account['Status'] = api_response['status']
+                account['Status Set On'] = api_response['created_on']
+                return account
 
     def write_to_new_file(self, input_file, output_file):
         """
