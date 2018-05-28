@@ -1,7 +1,12 @@
 import csv
+import logging
+from logging import Logger
+
 import requests
 
 API_ENDPOINT = "http://interview.wpengine.io/v1/accounts/"
+
+logger: Logger = logging.getLogger()
 
 
 class WpeMerge(object):
@@ -15,15 +20,16 @@ class WpeMerge(object):
     Merge this data to a new csv with the following fields:
     Account ID, First Name, Created On, Status, Status Set On
     """
-
-    def parse_csv(self, input_file):
+    @staticmethod
+    def parse_csv(input_file):
         """
         Parse the csv as an OrderedDict.
-        :return: list of dicts for each account.
+        :return: dictionary object 
         """
         return csv.DictReader(input_file)
 
-    def fetch_api(self, account_id):
+    @staticmethod
+    def fetch_api(account_id):
         """
         :param: pass an account_id
         :return: json (dict) response from the api
@@ -32,11 +38,12 @@ class WpeMerge(object):
             if x.status_code == 200:
                 return x.json()
             else:
-                pass # look into logger to send msg to std.err
+                logger.info('It looks like {} may not be a valid Account ID.'.format(account_id))
 
     def merge(self, account):
         """
-        Parse the csv; for each account id, hit the API and merge the data
+        hit the API and merge the data
+        :param: pass account_id
         :return: list of dictionaries for each account id
         """    
         api_response = self.fetch_api(account['Account ID'])
@@ -45,16 +52,21 @@ class WpeMerge(object):
             account['Status Set On'] = api_response['created_on']
             return account
 
-
     def write_to_new_file(self, input_file, output_file):
         """
-        Call merge() and write the merged data to our output_file
+        Iterate over the csv file, calling merge() for each line
+        and writing to the new file
+        :param: opened source csv file in read status
+        :param: opened destination file to be written to, also in write status
         """
-        with open(output_file, 'w') as csvfile:
-            fieldnames = "Account ID", "First Name", "Created On", "Status", "Status Set On"
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            for account in self.parse_csv(open(input_file, 'r')):
-                self.merge(account)                
+        fieldnames = "Account ID", "First Name", "Created On", "Status", "Status Set On"
+        writer = csv.DictWriter(output_file, fieldnames=fieldnames)
+        writer.writeheader()
+        for account in self.parse_csv(input_file):
+            self.merge(account)
+            if len(account) == 6:  # only write to the new file if all fields are there
                 del account['Account Name']  # Account name doesn't need to be written to the new csv
                 writer.writerow(account)
+            else:
+                # what happens if there's no AccountID?
+                logger.warning('{} is missing values. Not writing to merged file.'.format(account['Account ID']))
