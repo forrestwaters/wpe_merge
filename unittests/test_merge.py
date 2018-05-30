@@ -1,7 +1,7 @@
 import logging
 import unittest
 from io import StringIO
-from src.merge import WpeMerge
+from wpe_merge.merge import WpeMerge
 from collections import OrderedDict
 
 

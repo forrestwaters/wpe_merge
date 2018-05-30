@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-from src.merge import WpeMerge
+from wpe_merge.merge import WpeMerge
 
 
 def parse_args():
