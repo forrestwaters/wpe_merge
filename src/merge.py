@@ -38,7 +38,7 @@ class WpeMerge(object):
             if x.status_code == 200:
                 return x.json()
             else:
-                logger.info('It looks like {} may not be a valid Account ID.'.format(account_id))
+                logger.warning('It looks like {} may not be a valid Account ID.'.format(account_id))
 
     def merge(self, account):
         """
@@ -69,5 +69,8 @@ class WpeMerge(object):
                 del account['Account Name']  # Account name doesn't need to be written to the new csv
                 writer.writerow(account)
             else:
-                # what happens if there's no AccountID?
-                logger.warning('{} is missing values. Not writing to merged file.'.format(account['Account ID']))
+                if account['Account ID'] == '':
+                    message = 'Line with blank account ID found in file'
+                else:
+                    message = 'Account {} is missing values'.format(account['Account ID'])
+                logger.warning('{}. Not writing to merged file.'.format(message))
