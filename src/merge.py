@@ -1,12 +1,10 @@
 import csv
 import logging
-from logging import Logger
-
 import requests
 
 API_ENDPOINT = "http://interview.wpengine.io/v1/accounts/"
 
-logger: Logger = logging.getLogger()
+logger = logging.getLogger()
 
 
 class WpeMerge(object):
@@ -63,10 +61,11 @@ class WpeMerge(object):
         fieldnames = "Account ID", "First Name", "Created On", "Status", "Status Set On"
         writer = csv.DictWriter(output_file, fieldnames=fieldnames)
         writer.writeheader()
+
         for account in self.parse_csv(input_file):
             self.merge(account)
             if len(account) == 6:  # only write to the new file if all fields are there
-                del account['Account Name']  # Account name doesn't need to be written to the new csv
+                del account['Account Name']  # Account name shouldn't be written to the new csv
                 writer.writerow(account)
             else:
                 if account['Account ID'] == '':
