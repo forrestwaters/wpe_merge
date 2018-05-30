@@ -1,4 +1,4 @@
-import csv
+import logging
 import unittest
 from io import StringIO
 from src.merge import WpeMerge
@@ -8,6 +8,7 @@ from collections import OrderedDict
 class TestWpeMerge(unittest.TestCase):
     input_file = StringIO("Account ID,Account Name,First Name,Created On\n12345,lexcorp,Lex,1/12/11")
     wpm = WpeMerge()
+    logging.disable(logging.WARNING)
 
     def test_fetch_api(self):
         expected_api_response = {"account_id": 12345, "status": "good", "created_on": "2011-01-12"}
