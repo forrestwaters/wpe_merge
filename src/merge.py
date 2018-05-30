@@ -19,14 +19,6 @@ class WpeMerge(object):
     Account ID, First Name, Created On, Status, Status Set On
     """
     @staticmethod
-    def parse_csv(input_file):
-        """
-        Parse the csv as an OrderedDict.
-        :return: dictionary object 
-        """
-        return csv.DictReader(input_file)
-
-    @staticmethod
     def fetch_api(account_id):
         """
         :param: pass an account_id
@@ -62,7 +54,7 @@ class WpeMerge(object):
         writer = csv.DictWriter(output_file, fieldnames=fieldnames)
         writer.writeheader()
 
-        for account in self.parse_csv(input_file):
+        for account in csv.DictReader(input_file):
             self.merge(account)
             if len(account) == 6:  # only write to the new file if all fields are there
                 del account['Account Name']  # Account name shouldn't be written to the new csv

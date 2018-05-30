@@ -9,9 +9,6 @@ class TestWpeMerge(unittest.TestCase):
     input_file = StringIO("Account ID,Account Name,First Name,Created On\n12345,lexcorp,Lex,1/12/11")
     wpm = WpeMerge()
 
-    def test_parse_csv(self):
-        self.assertIsInstance(self.wpm.parse_csv(self.input_file), csv.DictReader)
-
     def test_fetch_api(self):
         expected_api_response = {"account_id": 12345, "status": "good", "created_on": "2011-01-12"}
 
