@@ -28,7 +28,7 @@ class WpeMerge(object):
             if x.status_code == 200:
                 return x.json()
             else:
-                logger.warning('It looks like {} may not be a valid Account ID.'.format(account_id))
+                logger.warning('Invalid API response for Account ID {}.'.format(account_id))
 
     def merge(self, account):
         """
