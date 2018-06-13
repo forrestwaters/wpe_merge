@@ -19,7 +19,7 @@ class WpeMerge(object):
     Account ID, First Name, Created On, Status, Status Set On
     """
     @staticmethod
-    def fetch_api(account_id):
+    def get_api_data(account_id):
         """
         :param: pass an account_id
         :return: json (dict) response from the api
@@ -37,7 +37,7 @@ class WpeMerge(object):
         :return: merged account dictionary
         """
         if account['Account ID'] is not '':
-            api_response = self.fetch_api(account['Account ID'])
+            api_response = self.get_api_data(account['Account ID'])
             if api_response is not None:
                 account['Status'] = api_response['status']
                 account['Status Set On'] = api_response['created_on']
